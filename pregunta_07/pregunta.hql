@@ -19,7 +19,7 @@ CREATE TABLE tbl0 (
     c3 INT,
     c4 DATE,
     c5 ARRAY<CHAR(1)>, 
-    c6 MAP<STRING, INT>
+    c6 MAP<STRING,INT>
 )
 ROW FORMAT DELIMITED 
 FIELDS TERMINATED BY ','
@@ -33,7 +33,7 @@ CREATE TABLE tbl1 (
     c1 INT,
     c2 INT,
     c3 STRING,
-    c4 MAP<STRING, INT>
+    c4 MAP<STRING,INT>
 )
 ROW FORMAT DELIMITED 
 FIELDS TERMINATED BY ','
@@ -45,10 +45,11 @@ LOAD DATA LOCAL INPATH 'data1.csv' INTO TABLE tbl1;
 /*
     >>> Escriba su respuesta a partir de este punto <<<
 */
+CREATE TABLE valor_unico AS SELECT c2, c1 FROM tbl0;
 
-INSERT OVERWRITE DIRECTORY 'output'
+
+INSERT OVERWRITE LOCAL DIRECTORY './output'
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 COLLECTION ITEMS TERMINATED BY ':'
-SELECT c2, COLLECT_SET(c1) as numeros FROM tbl0
-GROUP BY c2
-ORDER BY c2, numeros;
+
+SELECT c2, collect_set(c1) FROM valor_unico GROUP BY c2;
